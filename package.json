@@ -1,8 +1,8 @@
 {
-  "name": "node",
-  "version": "1.0.0",
-  "description": "",
-  "main": "mysql.js",
+  "name": "lht65-mqtt-to-thingsboard",
+  "version": "0.0.6",
+  "description": "Node code to read LHT65 device data from an MQTT server and post it to Thingsboard. Also uses MySQL as a store of device names and Thingsboard access code.",
+  "main": "mqtt-to-thingsboard.js",
   "dependencies": {
     "baseconvert": "^1.0.0",
     "bluebird": "^3.7.2",
@@ -16,6 +16,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Jonny McCullagh",
   "license": "ISC"
 }

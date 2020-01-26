@@ -28,7 +28,9 @@ client.on('connect', function() { // When connected
             // ---- Get Internal Temperature -----
             temp_as_hex=data_as_hex.slice(4,8)
             temp_as_int=parseInt(temp_as_hex, 16)
-            if(temp_as_int > 1250){
+            // if the temp is above 125C then it must be a negative temp
+            // so subtract 65536 for correct negative value
+            if(temp_as_int > 12500){
                 internal_temp_as_dec=(temp_as_int-65536)/100
             }else{
                 internal_temp_as_dec=temp_as_int/100
@@ -45,14 +47,12 @@ client.on('connect', function() { // When connected
                 console.log("External Temperature:" + external_temp_as_dec)
             }
             // ---- Get Humidity -----
-
             humidity_as_hex=data_as_hex.slice(8,12)
             humidity_as_int=parseInt(humidity_as_hex, 16)
             humidity_as_dec=humidity_as_int/10
             console.log("Humidity:" + humidity_as_dec)
 
             // ---- Get Battery Status -----
-
             var hexString = data_as_hex.slice(0,4);
             var binaryString = hexToBinary(hexString);
             status_bits = binaryString.slice(0,2);
@@ -64,14 +64,11 @@ client.on('connect', function() { // When connected
             }
             console.log("Battery Status:" + status_as_string)
             // ---- Get Battery Voltage -----
-
             voltage_bits=binaryString.slice(2,16);
             var voltage_as_dec = baseConvert.bin2dec(voltage_bits)/1000;
             console.log("Battery Voltage:" + voltage_as_dec)
 
             // create array to store readings
-
-
             json_for_tb = {
                 'internal_temp': internal_temp_as_dec,
                 'external_temp': external_temp_as_dec,

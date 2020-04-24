@@ -29,7 +29,7 @@ connection.query(sql_count, [device_name], (error, results, fields) => {
 }; 
 //});
   connection.end();
-}); // end get_device_access_code
+}); // end getAccessCode
 }
 
 function setDeviceTemperature(device_name, temperature, setDeviceTemperatureCallback) {
@@ -38,8 +38,11 @@ let mysql = require('mysql');
 let config = require('./config.js');
  
 let connection = mysql.createConnection(config.mysql_config);
- 
+let conn_fss = mysql.createConnection(config.fss_mysql_config);
+
 let sql = `UPDATE devices SET latest_temp=?, latest_temp_date=NOW() WHERE mikes_name=?`;
+let sql_fss = `UPDATE devices SET cooler_current_temp=?, cooler_date_latest=NOW() WHERE donard_label=?`;
+
 connection.query(sql, [temperature, device_name], (error, results, fields) => {
   if (error) {
     return console.error(error.message);
@@ -48,9 +51,20 @@ connection.query(sql, [temperature, device_name], (error, results, fields) => {
   setDeviceTemperatureCallback(null, temperature);
   return results[0];
 });
-  connection.end();
-} // end get_device_access_code
+connection.end();
 
+conn_fss.query(sql_fss, [temperature, device_name], (error, results, fields) => {
+    if (error) {
+      return console.error(error.message);
+    }
+    console.log("Update temperature in FSS cookie DB executed");
+    setDeviceTemperatureCallback(null, temperature);
+    return results[0];
+  });
+conn_fss.end();
+
+
+} // end setDeviceTemperature
 
 module.exports.getAccessCode = getAccessCode;
 module.exports.setDeviceTemperature = setDeviceTemperature;
